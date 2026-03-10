@@ -1,5 +1,6 @@
 import { Heart, Users, Sparkles, Drama, Eye, Music, Star, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const navLinks = [
   { label: "Introduction", href: "#hero" },
