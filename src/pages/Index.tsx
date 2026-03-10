@@ -9,6 +9,7 @@ const navLinks = [
   { label: "Community", href: "#community" },
   { label: "Well-being", href: "#wellbeing" },
   { label: "Conclusion", href: "#conclusion" },
+  { label: "Try It Yourself", href: "/try-it-yourself", isRoute: true },
 ];
 
 const Index = () => {
