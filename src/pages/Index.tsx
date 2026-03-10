@@ -1,5 +1,6 @@
 import { Heart, Users, Sparkles, Drama, Eye, Music, Star, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const navLinks = [
   { label: "Introduction", href: "#hero" },
@@ -8,6 +9,7 @@ const navLinks = [
   { label: "Community", href: "#community" },
   { label: "Well-being", href: "#wellbeing" },
   { label: "Conclusion", href: "#conclusion" },
+  { label: "Try It Yourself", href: "/try-it-yourself", isRoute: true },
 ];
 
 const Index = () => {
@@ -33,15 +35,25 @@ const Index = () => {
             Dynamics of Happiness
           </span>
           <div className="hidden md:flex gap-6">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              (link as any).isRoute ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-sm text-primary font-medium hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </a>
+              )
+            )}
           </div>
         </div>
       </nav>
