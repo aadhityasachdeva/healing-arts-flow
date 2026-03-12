@@ -23,6 +23,7 @@ const App = () => (
           <Route path="/catalogue" element={<Catalogue />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Chatbot />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
