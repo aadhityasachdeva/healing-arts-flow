@@ -287,7 +287,7 @@ const Index = () => {
       {scrolled && (
         <a
           href="#hero"
-          className="fixed bottom-6 right-6 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:opacity-80 transition-opacity"
+          className="fixed bottom-6 right-24 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md hover:opacity-80 transition-opacity z-40"
         >
           <ArrowUp className="w-4 h-4" />
         </a>
