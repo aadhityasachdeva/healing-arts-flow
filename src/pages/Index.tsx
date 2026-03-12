@@ -10,6 +10,7 @@ const navLinks = [
   { label: "Well-being", href: "#wellbeing" },
   { label: "Conclusion", href: "#conclusion" },
   { label: "Try It Yourself", href: "/try-it-yourself", isRoute: true },
+  { label: "Catalogue", href: "/catalogue", isRoute: true },
 ];
 
 const Index = () => {
