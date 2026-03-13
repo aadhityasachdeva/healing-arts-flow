@@ -1,4 +1,4 @@
-import { Heart, Users, Sparkles, Drama, Eye, Music, Star, ArrowUp } from "lucide-react";
+import { Heart, Users, Sparkles, Drama, Eye, Music, Star, ArrowUp, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -15,6 +15,7 @@ const navLinks = [
 
 const Index = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -35,6 +36,13 @@ const Index = () => {
             <Drama className="inline-block w-5 h-5 mr-2 text-primary" />
             Dynamics of Happiness
           </span>
+          <button
+            className="md:hidden text-foreground"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
           <div className="hidden md:flex gap-6">
             {navLinks.map((link) =>
               (link as any).isRoute ? (
@@ -57,6 +65,32 @@ const Index = () => {
             )}
           </div>
         </div>
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="md:hidden bg-background/95 backdrop-blur border-t border-border px-6 py-4 flex flex-col gap-3">
+            {navLinks.map((link) =>
+              (link as any).isRoute ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-sm text-primary font-medium hover:text-foreground transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </a>
+              )
+            )}
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
