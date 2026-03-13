@@ -1,79 +1,76 @@
 import { useState } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X } from "lucide-react";
 
-const presetQA: { keywords: string[]; answer: string }[] = [
+const presetQuestions = [
   {
-    keywords: ["what is performing arts", "performing arts", "what are performing arts"],
-    answer: "Performing arts include disciplines like theatre, dance, music, and spoken word — any art form performed live before an audience. They allow individuals to express emotions, tell stories, and connect with others.",
+    question: "What are performing arts?",
+    answer:
+      "Performing arts are creative art forms where artists use their body, voice, or movement to express ideas and emotions in front of an audience. Examples include theatre, dance, music, and storytelling.",
   },
   {
-    keywords: ["theatre", "theater", "what is theatre"],
-    answer: "Theatre is a collaborative art form combining acting, directing, writing, and design to tell stories on stage. It's one of the oldest forms of human expression and a powerful tool for emotional well-being.",
+    question: "How does theatre help mental health?",
+    answer:
+      "Theatre allows individuals to explore emotions, express themselves creatively, and connect with others. Acting and storytelling can help people process feelings, reduce stress, and develop empathy.",
   },
   {
-    keywords: ["mental health", "well-being", "wellbeing", "happiness"],
-    answer: "Performing arts contribute to mental well-being by reducing stress, boosting self-confidence, improving emotional awareness, and fostering a sense of community and belonging.",
+    question: "Why do people feel connected during performances?",
+    answer:
+      "Audiences experience stories together. Watching characters go through emotional journeys can create empathy, reflection, and a shared emotional experience that bonds people.",
   },
   {
-    keywords: ["exercise", "exercises", "practice", "try"],
-    answer: "You can try simple exercises like the Emotion Mirror (expressing emotions in a mirror), One-Minute Character (improvising as a character), or Silent Story (telling a story through gestures). Visit our 'Try It Yourself' page for more!",
+    question: "How do performing arts help performers emotionally?",
+    answer:
+      "Performers channel emotions through characters, which helps them understand and process their own feelings. The creative process builds confidence, resilience, and emotional intelligence.",
   },
   {
-    keywords: ["benefits", "why", "advantages"],
-    answer: "Key benefits include: increased self-confidence, emotional awareness, stress relief, a sense of purpose, improved empathy, and stronger social connections.",
+    question: "How do audiences benefit from theatre?",
+    answer:
+      "Audiences gain emotional insight, stress relief, and a sense of community. Watching stories unfold on stage can spark reflection, inspire change, and provide a meaningful escape from daily life.",
   },
   {
-    keywords: ["community", "connection", "social"],
-    answer: "Theatre is inherently collaborative. It brings people together in shared emotional experiences and artistic communities provide belonging, support, and creative fulfillment.",
+    question: "Can theatre reduce stress?",
+    answer:
+      "Yes! Both performing and watching theatre can lower stress. Acting provides a creative outlet, while audiences experience catharsis — an emotional release that leaves them feeling lighter and more at peace.",
   },
   {
-    keywords: ["escape", "stress", "relief"],
-    answer: "Performing arts act as a healthy escape — performers can step into characters to temporarily leave personal worries, while audiences find reflection and relief through shared stories.",
-  },
-  {
-    keywords: ["hello", "hi", "hey", "help"],
-    answer: "Hello! I'm here to answer questions about performing arts and their connection to happiness and well-being. Try asking about theatre, mental health benefits, or exercises you can try!",
-  },
-  {
-    keywords: ["catalogue", "videos", "learn", "watch"],
-    answer: "Check out our Video Catalogue page for curated YouTube tutorials on theatre exercises you can practice at home!",
+    question: "What theatre exercises can I try alone?",
+    answer:
+      "Simple activities like improvising a character, expressing emotions in front of a mirror, or telling a silent story through gestures can help develop creativity and emotional awareness. Visit our 'Try It Yourself' page for guided exercises!",
   },
 ];
 
-function findAnswer(input: string): string {
-  const lower = input.toLowerCase();
-  for (const qa of presetQA) {
-    if (qa.keywords.some((kw) => lower.includes(kw))) {
-      return qa.answer;
-    }
-  }
-  return "I'm a simple helper focused on performing arts and well-being. Try asking about theatre, mental health benefits, exercises, or our video catalogue!";
+interface Message {
+  role: "bot" | "user";
+  text: string;
+  showQuestions?: boolean;
 }
 
-interface Message {
-  role: "user" | "bot";
-  text: string;
-}
+const INTRO_MESSAGE: Message = {
+  role: "bot",
+  text: "Hello! I'm your Theatre Guide. 🎭\n\nI can help you explore how performing arts like theatre, dance, and storytelling contribute to mental well-being and happiness.\n\nChoose a question below to learn more.",
+  showQuestions: true,
+};
 
 const Chatbot = () => {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "bot", text: "Hi! Ask me anything about performing arts and happiness. 🎭" },
-  ]);
-  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([INTRO_MESSAGE]);
 
-  const send = () => {
-    const trimmed = input.trim();
-    if (!trimmed) return;
-    const userMsg: Message = { role: "user", text: trimmed };
-    const botMsg: Message = { role: "bot", text: findAnswer(trimmed) };
-    setMessages((prev) => [...prev, userMsg, botMsg]);
-    setInput("");
+  const handleQuestion = (q: (typeof presetQuestions)[number]) => {
+    setMessages((prev) => [
+      ...prev.map((m) => ({ ...m, showQuestions: false })),
+      { role: "user" as const, text: q.question },
+      {
+        role: "bot" as const,
+        text: q.answer + "\n\nWould you like to explore more?",
+        showQuestions: true,
+      },
+    ]);
   };
+
+  const reset = () => setMessages([INTRO_MESSAGE]);
 
   return (
     <>
-      {/* Floating button */}
       <button
         onClick={() => setOpen(!open)}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:bg-primary/90 transition-colors"
@@ -82,45 +79,44 @@ const Chatbot = () => {
         {open ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </button>
 
-      {/* Chat window */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 max-h-[28rem] bg-card border border-border rounded-xl shadow-xl flex flex-col overflow-hidden">
-          <div className="px-4 py-3 border-b border-border bg-secondary/50">
-            <p className="font-serif text-sm font-semibold" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
-              🎭 Arts & Happiness Assistant
-            </p>
+        <div className="fixed bottom-24 right-6 z-50 w-[22rem] max-h-[32rem] bg-card border border-border rounded-xl shadow-xl flex flex-col overflow-hidden">
+          <div className="px-4 py-3 border-b border-border bg-secondary/50 flex items-center justify-between">
+            <p className="font-serif text-sm font-semibold">🎭 Ask the Theatre Guide</p>
+            <button onClick={reset} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              Restart
+            </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-[12rem]">
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-[14rem]">
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`max-w-[85%] text-sm px-3 py-2 rounded-lg leading-relaxed ${
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-foreground"
-                  }`}
-                >
-                  {msg.text}
+              <div key={i}>
+                <div className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`max-w-[85%] text-sm px-3 py-2 rounded-lg leading-relaxed whitespace-pre-line ${
+                      msg.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-foreground"
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
                 </div>
+                {msg.showQuestions && (
+                  <div className="mt-3 space-y-2">
+                    {presetQuestions.map((q, qi) => (
+                      <button
+                        key={qi}
+                        onClick={() => handleQuestion(q)}
+                        className="w-full text-left text-xs px-3 py-2 rounded-md border border-border bg-background text-foreground hover:border-primary/50 hover:bg-primary/5 transition-colors"
+                      >
+                        {q.question}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
-          </div>
-
-          <div className="px-3 py-3 border-t border-border flex gap-2">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Ask about performing arts..."
-              className="flex-1 bg-background border border-input rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
-            />
-            <button
-              onClick={send}
-              className="w-9 h-9 rounded-md bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
-            >
-              <Send className="w-4 h-4" />
-            </button>
           </div>
         </div>
       )}
